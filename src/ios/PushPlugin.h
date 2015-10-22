@@ -36,6 +36,7 @@
     BOOL    clearBadge;
     
     BOOL ready;
+    void (^completionHandler)(UIBackgroundFetchResult);
 }
 
 @property (nonatomic, copy) NSString *callbackId;

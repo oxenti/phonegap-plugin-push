@@ -100,6 +100,7 @@ static char launchNotificationKey;
             PushPlugin *pushHandler = [self getCommandInstance:@"PushNotification"];
             pushHandler.notificationMessage = userInfo;
             pushHandler.isInline = NO;
+            pushHandler.completionHandler = safeHandler;
             [pushHandler notificationReceived];
         } else {
             NSLog(@"just put it in the shade");

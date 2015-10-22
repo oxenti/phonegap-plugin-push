@@ -35,7 +35,6 @@
 @synthesize callback;
 @synthesize clearBadge;
 
-
 - (void)unregister:(CDVInvokedUrlCommand*)command;
 {
     self.callbackId = command.callbackId;
@@ -306,6 +305,34 @@
     CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
     
     [self.commandDelegate sendPluginResult:commandResult callbackId:self.callbackId];
+}
+
+-(void) finish:(CDVInvokedUrlCommand*)command
+{
+    [self doFinish];
+}
+
+-(void) doFinish
+{
+    UIApplication *app = [UIApplication sharedApplication];
+    float finishTimer = (app.backgroundTimeRemaining > 20.0) ? 20.0 : app.backgroundTimeRemaining;
+    
+    [NSTimer scheduledTimerWithTimeInterval:finishTimer
+                                     target:self
+                                   selector:@selector(stopBackgroundTask:)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+-(void)stopBackgroundTask:(NSTimer*)timer
+{
+    UIApplication *app = [UIApplication sharedApplication];
+    
+    if (completionHandler) {
+        NSLog(@"- CDVBackgroundNotification stopBackgroundTask (remaining t: %f)", app.backgroundTimeRemaining);
+        completionHandler(UIBackgroundFetchResultNewData);
+        completionHandler = nil;
+    }
 }
 
 @end
