@@ -34,6 +34,7 @@
 @synthesize notificationCallbackId;
 @synthesize callback;
 @synthesize clearBadge;
+@synthesize handlerObj;
 
 - (void)unregister:(CDVInvokedUrlCommand*)command;
 {
@@ -328,10 +329,16 @@
 {
     UIApplication *app = [UIApplication sharedApplication];
     
-    if (completionHandler) {
-        NSLog(@"- CDVBackgroundNotification stopBackgroundTask (remaining t: %f)", app.backgroundTimeRemaining);
-        completionHandler(UIBackgroundFetchResultNewData);
-        completionHandler = nil;
+    NSLog(@"Push Plugin stopBackgroundTask called");
+    
+    if (handlerObj) {
+        NSLog(@"Push Plugin handlerObj");
+        completionHandler = [handlerObj[@"handler"] copy];
+        if (completionHandler) {
+            NSLog(@"Push Plugin: stopBackgroundTask (remaining t: %f)", app.backgroundTimeRemaining);
+            completionHandler(UIBackgroundFetchResultNewData);
+            completionHandler = nil;
+        }
     }
 }
 

@@ -96,11 +96,14 @@ static char launchNotificationKey;
                     completionHandler(result);
                 });
             };
-
+            
+            NSMutableDictionary* params = [NSMutableDictionary dictionaryWithCapacity:2];
+            [params setObject:safeHandler forKey:@"handler"];
+            
             PushPlugin *pushHandler = [self getCommandInstance:@"PushNotification"];
             pushHandler.notificationMessage = userInfo;
             pushHandler.isInline = NO;
-            pushHandler.completionHandler = safeHandler;
+            pushHandler.handlerObj = params;
             [pushHandler notificationReceived];
         } else {
             NSLog(@"just put it in the shade");
